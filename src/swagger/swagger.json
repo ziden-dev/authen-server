@@ -1,0 +1,567 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Authen Server",
+    "description": "API for authen server"
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "API for authentication"
+    },
+    {
+      "name": "issuers",
+      "description": "API for issuers"
+    },
+    {
+      "name": "claims",
+      "description": "API for Claims"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/login/{issuerId}": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "API login",
+        "description": "API login",
+        "parameters": [
+          {
+            "name": "issuerId",
+            "in": "path",
+            "description": "issuerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/verify-token/{issuerId}": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "API Verify Token",
+        "description": "API Verify Token",
+        "parameters": [
+          {
+            "name": "issuerId",
+            "in": "path",
+            "description": "issuerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Your jwz token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyToken"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/verify-token-admin/{issuerId}": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "API Verify Token",
+        "description": "API Verify Token",
+        "parameters": [
+          {
+            "name": "issuerId",
+            "in": "path",
+            "description": "issuerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Your jwz token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyToken"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/issuers/register": {
+      "post": {
+        "tags": [
+          "issuers"
+        ],
+        "summary": "Register new issuers",
+        "description": "Register new issuers",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Holder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/issuers/{issuerId}/operators": {
+      "post": {
+        "security": [
+          {
+            "Authorization": ["read", "write"]
+          }
+        ],
+        "tags": [
+          "issuers"
+        ],
+        "summary": "Create operator",
+        "description": "Create operator",
+        "parameters": [
+          {
+            "name": "issuerId",
+            "in": "path",
+            "description": "issuerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Operator"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [
+          {
+            "Authorization": ["read", "write"]
+          }
+        ],
+        "tags": [
+          "issuers"
+        ],
+        "summary": "Get list operator",
+        "description": "Get list operator",
+        "parameters": [
+          {
+            "name": "issuerId",
+            "in": "path",
+            "description": "issuerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/issuers/{issuerId}/operators/{operatorId}": {
+      "get": {
+        "tags": [
+          "issuers"
+        ],
+        "summary": "Get operator infor",
+        "description": "Get operator infor",
+        "parameters": [
+          {
+            "name": "issuerId",
+            "in": "path",
+            "description": "issuerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operatorId",
+            "in": "path",
+            "description": "operatorId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "Authorization": ["read", "write"]
+          }
+        ],
+        "tags": [
+          "issuers"
+        ],
+        "summary": "Disable operator",
+        "description": "Disable operator",
+        "parameters": [
+          {
+            "name": "issuerId",
+            "in": "path",
+            "description": "issuerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operatorId",
+            "in": "path",
+            "description": "operatorId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/claims/{claimId}/proof": {
+      "get": {
+        "tags": [
+          "claims"
+        ],
+        "summary": "Query proof input",
+        "description": "Query proof input",
+        "parameters": [
+          {
+            "name": "claimId",
+            "in": "path",
+            "description": "id of claim",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "type in (mtp, nonRevMtp)",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "mtp",
+              "enum": [
+                "mtp",
+                "nonRevMtp"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "APIResponse": {
+        "type": "object",
+        "properties": {
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "proof": {
+            "type": "object"
+          },
+          "public_signals": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "circuitId": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
+          },
+          "algorithm": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "string"
+          }
+        }
+      },
+      "VerifyToken": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "Holder": {
+        "type": "object",
+        "properties": {
+          "pubkeyX": {
+            "type": "string",
+            "example": "1234"
+          },
+          "pubkeyY": {
+            "type": "string",
+            "example": "1234"
+          }
+        }
+      },
+      "Operator": {
+        "type": "object",
+        "properties": {
+          "operatorId": {
+            "type": "string",
+            "example": "1234"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "in": "header",
+        "name": "Authorization",
+        "type": "apiKey",
+        "description": "Token authorization"
+      }
+    }
+  }
+}
