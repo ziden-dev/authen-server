@@ -535,11 +535,7 @@
       "Holder": {
         "type": "object",
         "properties": {
-          "pubkeyX": {
-            "type": "string",
-            "example": "1234"
-          },
-          "pubkeyY": {
+          "issuerId": {
             "type": "string",
             "example": "1234"
           }
