@@ -178,10 +178,10 @@ export async function registerOperator(userId: string, issuerId: string, operato
         
         GlobalVariables.logTree = false;
 
-        const checkOperator = await checkOperatorExisted(newClaim.userId!, newClaim.userId!);
-        if (!checkOperator) {
-            await saveNewOperator(userId, operator, newClaim.id!, issuerId);
-        }
+        // const checkOperator = await checkOperatorExisted(newClaim.userId!, newClaim.userId!);
+        // if (!checkOperator) {
+        await saveNewOperator(userId, operator, newClaim.id!, issuerId);
+        // }
 
         return {
             userId: userId,
