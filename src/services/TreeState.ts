@@ -5,7 +5,7 @@ import { createNewLevelDb, openLevelDb } from "./LevelDbManager.js";
 import { v4 } from "uuid";
 import { PRIVATEKEY, PUBKEYX, PUBKEYY } from "../common/config/secrets.js";
 import { authenSchemaHash, serverAuthenTreeId } from "../common/config/constant.js";
-import { ClaimStatus, OperatorType, ProofType } from "../common/enum/EnumType.js";
+import { ClaimStatus, ProofType } from "../common/enum/EnumType.js";
 import { checkIssuerExisted, getIssuerIdByPublicKey, updateIssuer } from "./Issuer.js";
 import Claim from "../models/Claim.js";
 import { checkOperatorExisted, saveNewOperator } from "./Operator.js";
@@ -119,10 +119,7 @@ export async function setupAuthenTree() {
 
 }
 
-export async function registerOperator(userId: string, issuerId: string, operator: number) {
-    if (operator != OperatorType.ADMIN && operator != OperatorType.OPERATOR) {
-        throw("Invalid operator!");
-    }
+export async function registerOperator(userId: string, adminId: string, operator: number) {
 
     const serverIssuerId = await getIssuerIdByPublicKey(PUBKEYX, PUBKEYY);
     if (GlobalVariables.logTree == true) {
@@ -135,7 +132,7 @@ export async function registerOperator(userId: string, issuerId: string, operato
         const newOperatorClaim = zidenjsClaim.entry.newClaim(
             zidenjsClaim.entry.schemaHashFromBigInt(BigInt(authenSchemaHash)),
             zidenjsClaim.entry.withValueData( zidenjsUtils.numToBits(BigInt(operator), 32), zidenjsUtils.numToBits(BigInt(0), 32)),
-            zidenjsClaim.entry.withIndexData( zidenjsUtils.hexToBuffer(userId, 32), zidenjsUtils.hexToBuffer(issuerId, 32)),
+            zidenjsClaim.entry.withIndexData( zidenjsUtils.hexToBuffer(userId, 32), zidenjsUtils.hexToBuffer(adminId, 32)),
             zidenjsClaim.entry.withIndexID(zidenjsUtils.hexToBuffer(userId, 32))
         );
 
@@ -177,15 +174,12 @@ export async function registerOperator(userId: string, issuerId: string, operato
         await newClaim.save();
         
         GlobalVariables.logTree = false;
-
-        // const checkOperator = await checkOperatorExisted(newClaim.userId!, newClaim.userId!);
-        // if (!checkOperator) {
-        await saveNewOperator(userId, operator, newClaim.id!, issuerId);
-        // }
+      
+        await saveNewOperator(userId, operator, newClaim.id!, adminId);
 
         return {
             userId: userId,
-            issuerId: issuerId,
+            adminId: adminId,
             operator: operator,
             claimId: newClaim.id,
             version: newClaim.version,
@@ -198,8 +192,8 @@ export async function registerOperator(userId: string, issuerId: string, operato
     }
 }
 
-export async function revokeOperator(operatorId: string, issuerId: string) {
-    const operator = await Operator.findOne({userId: operatorId, issuerId: issuerId});
+export async function revokeOperator(operatorId: string, adminId: string) {
+    const operator = await Operator.findOne({userId: operatorId, adminId: adminId});
     if (!operator) {
         return;
     }

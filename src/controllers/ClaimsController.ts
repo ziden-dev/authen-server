@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { buildErrorMessage, buildResponse } from "../common/APIBuilderResponse.js";
 import { ExceptionMessage } from "../common/enum/ExceptionMessages.js";
 import { ResultMessage } from "../common/enum/ResultMessages.js";
-import { getClaimByClaimId, getNonRevQueryMTPInput, getQueryMTPInput, queryClaim, saveClaim, setRevokeClaim } from "../services/Claim.js";
+import { getClaimByClaimId, getNonRevQueryMTPInput, getQueryMTPInput} from "../services/Claim.js";
 import { ClaimStatus, ProofTypeQuery } from "../common/enum/EnumType.js";
 import { GlobalVariables } from "../common/config/global.js";
 

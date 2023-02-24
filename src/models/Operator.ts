@@ -5,7 +5,7 @@ const Operator = new mongoose.Schema({
     role: Number,
     claimId: String,
     createAt: Number,
-    issuerId: String,
+    adminId: String,
     activate: Boolean
 });
 

@@ -6,15 +6,15 @@ import { ResultMessage } from "../common/enum/ResultMessages.js";
 import { getListOperator, getOperatorInfor } from "../services/Operator.js";
 import { registerOperator, revokeOperator } from "../services/TreeState.js";
 
-export class IssuerController {
-    public async registerIssuer(req: Request, res: Response) {
+export class AdminController {
+    public async registerAdmin(req: Request, res: Response) {
         try {
-            const {issuerId} = req.body;
-            if (typeof issuerId != "string") {
+            const {userId} = req.body;
+            if (typeof userId != "string") {
                 throw("Invalid data");
             }
 
-            const registerResponse = await registerOperator(issuerId, issuerId, 1);
+            const registerResponse = await registerOperator(userId, userId, 1);
             res.send(buildResponse(ResultMessage.APISUCCESS.apiCode, registerResponse, ResultMessage.APISUCCESS.message));
         } catch (err: any) {
             console.log(err);
@@ -24,21 +24,21 @@ export class IssuerController {
 
     public async addNewOperator(req: Request, res: Response) {
         try {
-            const {issuerId} = req.params;
-            if (!issuerId || typeof issuerId != "string") {
-                throw("IssuerId invalid!");
+            const {adminId} = req.params;
+            if (!adminId || typeof adminId != "string") {
+                throw("AdminId invalid!");
             }
 
-            const {operatorId} = req.body;
-            if (!operatorId || typeof operatorId != "string") {
-                throw("OperatorId invalid!");
+            const {operatorId, role} = req.body;
+            if (!operatorId || typeof operatorId != "string" || typeof role != "number") {
+                throw("Operator invalid!");
             }
 
             if (GlobalVariables.logTree) {
                 throw("Await Publish!");
             }
 
-            const registerResponse = await registerOperator(operatorId, issuerId, 2);
+            const registerResponse = await registerOperator(operatorId, adminId, role);
             res.status(200).send(buildResponse(ResultMessage.APISUCCESS.apiCode, registerResponse, ResultMessage.APISUCCESS.message));
         } catch (err: any) {
             console.log(err);
@@ -48,16 +48,16 @@ export class IssuerController {
 
     public async deleteOperator(req: Request, res: Response) {
         try {
-            const {issuerId, operatorId} = req.params;
-            if (!issuerId || typeof issuerId != "string") {
-                throw("IssuerId invalid!");
+            const {adminId, operatorId} = req.params;
+            if (!adminId || typeof adminId != "string") {
+                throw("AdminId invalid!");
             }
 
             if (!operatorId || typeof operatorId != "string") {
                 throw("OperatorId invalid!");
             }
 
-            await revokeOperator(operatorId, issuerId);
+            await revokeOperator(operatorId, adminId);
             res.send(buildResponse(ResultMessage.APISUCCESS.apiCode, {}, ResultMessage.APISUCCESS.message));
         } catch (err: any) {
             console.log(err);
@@ -67,16 +67,16 @@ export class IssuerController {
 
     public async getOperatorInfor(req: Request, res: Response) {
         try {
-            const {issuerId, operatorId} = req.params;
-            if (!issuerId || typeof issuerId != "string") {
-                throw("IssuerId invalid!");
+            const {adminId, operatorId} = req.params;
+            if (!adminId || typeof adminId != "string") {
+                throw("AdminId invalid!");
             }
 
             if (!operatorId || typeof operatorId != "string") {
                 throw("OperatorId invalid!");
             }
 
-            const operator = await getOperatorInfor(operatorId, issuerId);
+            const operator = await getOperatorInfor(operatorId, adminId);
             res.send(buildResponse(ResultMessage.APISUCCESS.apiCode, operator, ResultMessage.APISUCCESS.message));
         
         } catch (err: any) {
@@ -87,12 +87,12 @@ export class IssuerController {
 
     public async getListOperator(req: Request, res: Response) {
         try {
-            const {issuerId} = req.params;
-            if (!issuerId || typeof issuerId != "string") {
-                throw("IssuerId invalid!");
+            const {adminId} = req.params;
+            if (!adminId || typeof adminId != "string") {
+                throw("AdminId invalid!");
             }
 
-            const operators = await getListOperator(issuerId);
+            const operators = await getListOperator(adminId);
             res.send(buildResponse(ResultMessage.APISUCCESS.apiCode, operators, ResultMessage.APISUCCESS.message));
 
         } catch (err: any) {

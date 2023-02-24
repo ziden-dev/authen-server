@@ -1,10 +1,10 @@
 import Operator from "../models/Operator.js";
 import { getClaimByClaimId } from "./Claim.js";
 
-export async function saveNewOperator(userId: string, role: number, claimId: string, issuerId: string) {
-    const isOperatorExisted = await checkOperatorExisted(userId, issuerId);
+export async function saveNewOperator(userId: string, role: number, claimId: string, adminId: string) {
+    const isOperatorExisted = await checkOperatorExisted(userId, adminId);
     if (isOperatorExisted) {
-        activateOperator(userId, issuerId, claimId);
+        activateOperator(userId, adminId, claimId);
     }
     else {
         const operator = new Operator({
@@ -12,7 +12,7 @@ export async function saveNewOperator(userId: string, role: number, claimId: str
             role: role,
             claimId: claimId,
             createAt: Number(Date.now()),
-            issuerId: issuerId,
+            adminId: adminId,
             activate: true
         });
     
@@ -20,8 +20,8 @@ export async function saveNewOperator(userId: string, role: number, claimId: str
     }
 }
 
-export async function activateOperator(userId: string, issuerId: string, claimId: string) {
-    const operator = await Operator.findOne({userId: userId, issuerId: issuerId});
+export async function activateOperator(userId: string, adminId: string, claimId: string) {
+    const operator = await Operator.findOne({userId: userId, adminId: adminId});
     if (!operator) {
         throw("Operator not exist!");
     } else {
@@ -32,8 +32,8 @@ export async function activateOperator(userId: string, issuerId: string, claimId
     }
 }
 
-export async function disableOperator(userId: string, issuerId: string) {
-    const operator = await Operator.findOne({userId: userId, issuerId: issuerId});
+export async function disableOperator(userId: string, adminId: string) {
+    const operator = await Operator.findOne({userId: userId, adminId: adminId});
     if (!operator) {
         throw("Operator not exist!");
     } else {
@@ -42,8 +42,8 @@ export async function disableOperator(userId: string, issuerId: string) {
     }
 }
 
-export async function checkOperatorExisted(userId: string, issuerId: string) {
-    const operator = await Operator.findOne({userId: userId, issuerId: issuerId});
+export async function checkOperatorExisted(userId: string, adminId: string) {
+    const operator = await Operator.findOne({userId: userId, adminId: adminId});
     if (operator) {
         return true;
     } else {
@@ -51,15 +51,15 @@ export async function checkOperatorExisted(userId: string, issuerId: string) {
     }
 }
 
-export async function getListOperator(issuerId: string) {
-    const operators = await Operator.find({issuerId: issuerId});
+export async function getListOperator(adminId: string) {
+    const operators = await Operator.find({adminId: adminId});
     const res: Array<any> = [];
     for (let i = 0; i < operators.length; i++) {
         res.push({
             userId: operators[i].userId,
             role: operators[i].role,
             claimId: operators[i].claimId,
-            issuerId: operators[i].issuerId,
+            adminId: operators[i].adminId,
             activate: operators[i].activate 
         });
     }
@@ -67,8 +67,8 @@ export async function getListOperator(issuerId: string) {
     return res;
 }
 
-export async function getOperatorInfor(operatorId: string, issuerId: string) {
-    const operator = await Operator.findOne({userId: operatorId, issuerId: issuerId});
+export async function getOperatorInfor(operatorId: string, adminId: string) {
+    const operator = await Operator.findOne({userId: operatorId, adminId: adminId});
     if (!operator) {
         throw("Operator not exist!");
     }
@@ -78,7 +78,7 @@ export async function getOperatorInfor(operatorId: string, issuerId: string) {
     const claim = await getClaimByClaimId(operator.claimId!);
     return {
         userId: operator.userId!,
-        issuerId: operator.issuerId!,
+        adminId: operator.adminId!,
         role: operator.role!,
         claimId: operator.claimId,
         schemaHash: claim.schemaHash,
