@@ -174,7 +174,7 @@ export async function registerOperator(userId: string, adminId: string, operator
         await newClaim.save();
         
         GlobalVariables.logTree = false;
-        
+      
         await saveNewOperator(userId, operator, newClaim.id!, adminId);
 
         return {
