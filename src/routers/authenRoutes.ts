@@ -10,8 +10,8 @@ export class AthenRoutes {
     }
 
     routers(): void {
-        this.router.post("/login/:issuerId", this.authenController.authentication);
-        this.router.post("/verify-token/:issuerId", this.authenController.verifyToken);
-        this.router.post("/verify-token-admin/:issuerId", this.authenController.verifyTokenAdmin);
+        this.router.post("/login/:adminId", this.authenController.authentication);
+        this.router.post("/verify-token/:adminId", this.authenController.verifyToken);
+        this.router.post("/verify-token-admin/:adminId", this.authenController.verifyTokenAdmin);
     }
 }

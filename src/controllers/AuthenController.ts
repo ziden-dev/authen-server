@@ -17,9 +17,9 @@ const timeLimit = 3600000*24*3;
 export class AuthenController {
   async authentication(req: Request, res: Response, next: NextFunction) {
     try {
-      const {issuerId} = req.params;
-      if (!issuerId) {
-        res.status(400).send({err: "IssuerId invalid"});
+      const {adminId} = req.params;
+      if (!adminId) {
+        res.status(400).send({err: "AdminId invalid"});
         return;
       }
       let { proof, public_signals, circuitId, schema, algorithm, payload } = req.body;
@@ -55,64 +55,11 @@ export class AuthenController {
     }
   }
   
-  async authorization(req: Request, res: Response, next: NextFunction) {
-    try {
-      const {issuerId} = req.params;
-      if (!issuerId ) {
-        res.send(buildErrorMessage(200, "IssuerId invalid", "Unable to login"));
-        return;
-      }
-      let token = req.headers.authorization;
-      if (token == "1") {
-        next();
-        return;
-      }
-      if (!token) {
-        res.status(400).send(buildErrorMessage(400, "Invalid token", "Unauthorized"));
-      } else {
-        try {
-          let parsedToken = JWZ.parse(token);
-          const authenIsser = await getAuthenIssuerId();
-          const authenIssuerId = BigInt("0x" + authenIsser!).toString();
-          let isValid = false;
-          try {
-            if ((await parsedToken.verifyToken(vk, Role.Admin, schemaHash, authenIssuerId, timeLimit))) {
-              isValid = true;
-            }
-          } catch (err) {
-          }
-
-          try {
-            if ((await parsedToken.verifyToken(vk, Role.Operator, schemaHash, authenIssuerId, timeLimit))) {
-              isValid = true;
-            }
-          } catch (err) {
-
-          }
-          if (isValid) {
-            next();
-            return;
-          }
-          else {
-            res.status(400).send(buildErrorMessage(400, "Invalid token", "Unauthorized"));
-            return;
-          }
-        } catch (err) {
-          res.status(400).send(buildErrorMessage(400, "Invalid token", "Unauthorized"));
-          return;
-        }
-      }
-    } catch (err: any) {
-      res.status(400).send(buildErrorMessage(400, "Invalid token", "Unauthorized"));
-      return;
-    }
-  }
-
   async authorizationAdmin(req: Request, res: Response, next: NextFunction) {
     try {
-      const {issuerId} = req.params;
-      if (!issuerId) {
-        res.send(buildErrorMessage(200, "IssuerId invalid", "Unable to login"));
+      const {adminId} = req.params;
+      if (!adminId) {
+        res.status(400).send(buildErrorMessage(400, "AdminId invalid", "Unable to login"));
         return;
       }
       let token = req.headers.authorization;
@@ -151,28 +98,23 @@ export class AuthenController {
 
   async verifyToken(req: Request, res: Response) {
     try {
-      const {issuerId} = req.params;
-      if (!issuerId) {
-        res.send(buildErrorMessage(200, "IssuerId invalid", "Unable to login"));
+      const {adminId} = req.params;
+      const {role} = req.body;
+      if (typeof adminId != "string" || (typeof role != "string" && typeof role != "number")) {
+        res.send(
+          buildResponse(ResultMessage.APISUCCESS.apiCode, {isValid: false}, ResultMessage.APISUCCESS.message)
+        );
         return;
       }
-      if (!issuerId || typeof issuerId != "string") {
 
-      }
       let {token} = req.body;
       let parsedToken = JWZ.parse(token);
       let isValid = false;
       const authenIsser = await getAuthenIssuerId();
       const authenIssuerId = BigInt("0x" + authenIsser!).toString();
-      try {
-        if ((await parsedToken.verifyToken(vk, Role.Admin, schemaHash, authenIssuerId, timeLimit))) {
-          isValid = true;
-        }
-      } catch (err) {
-      }
 
       try {
-        if ((await parsedToken.verifyToken(vk, Role.Operator, schemaHash, authenIssuerId, timeLimit))) {
+        if ((await parsedToken.verifyToken(vk, role.toString(), schemaHash, authenIssuerId, timeLimit))) {
           isValid = true;
         }
       } catch (err) {
@@ -198,13 +140,11 @@ export class AuthenController {
 
   async verifyTokenAdmin(req: Request, res: Response) {
     try {
-      const {issuerId} = req.params;
-      if (!issuerId) {
-        res.send(buildErrorMessage(200, "IssuerId invalid", "Unable to login"));
-        return;
-      }
-      if (!issuerId || typeof issuerId != "string") {
-
+      const {adminId} = req.params;
+      if (!adminId || typeof adminId != "string") {
+        res.send(
+          buildResponse(ResultMessage.APISUCCESS.apiCode, {isValid: false}, ResultMessage.APISUCCESS.message)
+        );
       }
       let {token} = req.body;
       let parsedToken = JWZ.parse(token);

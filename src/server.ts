@@ -12,7 +12,7 @@ import { readFileSync } from 'fs';
 import logger from './lib/logger/index.js';
 import morgan from 'morgan';
 import { AthenRoutes } from './routers/authenRoutes.js';
-import { IssuerRooutes } from './routers/issuersRoutes.js';
+import { IssuerRooutes } from './routers/adminsRoutes.js';
 import { ClaimsRouters } from './routers/claimsRoutes.js';
 import { setupAuthenTree } from './services/TreeState.js';
 
@@ -34,7 +34,7 @@ class Server {
 
   public routes(): void {
     this.app.use("/api/v1/auth", new AthenRoutes().router);
-    this.app.use("/api/v1/issuers", new IssuerRooutes().router);
+    this.app.use("/api/v1", new IssuerRooutes().router);
     this.app.use("/api/v1/claims", new ClaimsRouters().router);
   }
 
