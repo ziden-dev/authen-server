@@ -543,7 +543,7 @@
       "Holder": {
         "type": "object",
         "properties": {
-          "issuerId": {
+          "userId": {
             "type": "string",
             "example": "1234"
           }
