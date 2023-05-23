@@ -10,4 +10,4 @@ down:
 	docker compose down
 
 logs:
-	docker compose logs -n 100 -t ts-node-docker
+	docker compose logs --tail 100 --timestamps authen-server
