@@ -21,8 +21,6 @@ services:
     command: npm run start
   authen-db:
     image: mongo
-    ports:
-      - 27017:27017
     volumes:
       - mongodb-authen:/data/db
 volumes:
