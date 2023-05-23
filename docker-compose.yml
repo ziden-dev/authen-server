@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  authen-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    volumes:
+      - ./src:/home/node/app/src
+      - ./logs:/home/node/app/logs
+      - ./db:/home/node/app/db
+      - ./build:/home/node/app/build
+    container_name: authen-server
+    depends_on:
+      - authen-db
+    expose:
+      - ${PORT}
+    ports:
+      - ${PORT}:${PORT}
+    command: npm run start
+  authen-db:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb-authen:/data/db
+volumes:
+  mongodb-authen:
