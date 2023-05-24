@@ -12,6 +12,9 @@ services:
       - ./db:/home/node/app/db
       - ./build:/home/node/app/build
     container_name: authen-server
+    networks:
+      - ziden
+      - default
     depends_on:
       - authen-db
     expose:
@@ -23,5 +26,12 @@ services:
     image: mongo
     volumes:
       - mongodb-authen:/data/db
+    networks:
+      - default
 volumes:
   mongodb-authen:
+networks:
+  ziden:
+    external: true
+    name: ziden
+  default:
