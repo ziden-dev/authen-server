@@ -77,8 +77,7 @@ export class JWZ {
       throw Error("Invalid zkProof")
     }
     else {
-      const schemaHash = BigInt("0b" + BigInt(this.zkProof.public_signals[6]).toString(2).padStart(198, "0").slice(64, 192)).toString();
-      if (_schemaHash != schemaHash || this.zkProof.public_signals[7] != _value || this.zkProof.public_signals[4] != _issuerID) {
+      if (_schemaHash != this.zkProof.public_signals[7] || this.zkProof.public_signals[10] != _value || this.zkProof.public_signals[4] != _issuerID) {
         return false;
       }
       else return true;
@@ -106,7 +105,7 @@ export class JWZ {
     if (!this.zkProof.proof || !this.zkProof.public_signals) {
       throw Error("Invalid zkProof")
     } else {
-      const schemaHash = BigInt("0b" + BigInt(this.zkProof.public_signals[6]).toString(2).padStart(198, "0").slice(64, 192)).toString();
+      const schemaHash = this.zkProof.public_signals[7];
       if (schemaHash == _schemaHash)
         return true;
       else return false;
@@ -118,6 +117,7 @@ export class JWZ {
       throw Error("Invalid zkProof");
     }
     else {
+
       if (!(await this.verifyProof(verification_key)) || !this.verifyExpiration(timeLimit) || !this.verifyPubSig(_value, _schemaHash, _issuerID)) {
         return false;
       } else return true;
@@ -128,7 +128,7 @@ export class JWZ {
     if (!this.zkProof.proof || !this.zkProof.public_signals) {
       throw Error("Invalid zkProof")
     } else {
-      const createdAt = BigInt("0b" + BigInt(this.zkProof.public_signals[6]).toString(2).padStart(198, "0").slice(0, 64))
+      const createdAt = BigInt(this.zkProof.public_signals[6]);
       if (BigInt(Date.now()) - createdAt > BigInt(timeLimit)) {
         return false;
       }

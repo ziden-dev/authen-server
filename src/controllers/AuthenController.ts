@@ -108,25 +108,22 @@ export class AuthenController {
       }
 
       let {token} = req.body;
-
       if (token == "1") {
         res.send(
           buildResponse(ResultMessage.APISUCCESS.apiCode, {isValid: true}, ResultMessage.APISUCCESS.message)
         );
         return;
       }
-
       let parsedToken = JWZ.parse(token);
       let isValid = false;
       const authenIsser = await getAuthenIssuerId();
       const authenIssuerId = BigInt("0x" + authenIsser!).toString();
-
       try {
         if ((await parsedToken.verifyToken(vk, role.toString(), schemaHash, authenIssuerId, timeLimit))) {
           isValid = true;
         }
+        
       } catch (err) {
-
       }
 
       if (isValid) {
