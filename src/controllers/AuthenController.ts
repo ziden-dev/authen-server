@@ -6,7 +6,7 @@ import { buildErrorMessage, buildResponse } from "../common/APIBuilderResponse.j
 import { ResultMessage } from "../common/enum/ResultMessages.js";
 import { getAuthenIssuerId } from "../services/Issuer.js";
 
-let vk = JSON.parse(fs.readFileSync(path.resolve("./build/authen/verification_key.json"), 'utf-8'));
+let vk = JSON.parse(fs.readFileSync("src/verificationKey/verification_key.json", "utf-8"));
 enum Role {
   Admin = "1",
   Operator = "2"
@@ -63,10 +63,6 @@ export class AuthenController {
         return;
       }
       let token = req.headers.authorization;
-      if (token == "1") {
-        next();
-        return;
-      }
       if (!token) {
         res.status(400).send(buildErrorMessage(400, "Invalid token", "Unauthorized"));
         return;
@@ -112,13 +108,12 @@ export class AuthenController {
       let isValid = false;
       const authenIsser = await getAuthenIssuerId();
       const authenIssuerId = BigInt("0x" + authenIsser!).toString();
-
       try {
         if ((await parsedToken.verifyToken(vk, role.toString(), schemaHash, authenIssuerId, timeLimit))) {
           isValid = true;
         }
+        
       } catch (err) {
-
       }
 
       if (isValid) {

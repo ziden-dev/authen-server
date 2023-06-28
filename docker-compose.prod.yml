@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  authen-server:
+    build:
+      target: production
+    expose:
+      - ${PORT}
+    ports:
+      - ${PORT}:${PORT}
+    command: node build/server.js

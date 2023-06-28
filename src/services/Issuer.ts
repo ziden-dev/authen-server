@@ -1,6 +1,5 @@
-import { PUBKEYX, PUBKEYY } from "../common/config/secrets.js";
-import { ClaimStatus } from "../common/enum/EnumType.js";
-import Claim from "../models/Claim.js";
+import {utils as zidenjsUtils, auth} from "@zidendev/zidenjs";
+import { PRIVATEKEY} from "../common/config/secrets.js";
 import Issuer from "../models/Issuer.js";
 
 export async function updateIssuer(issuerId: string, pubkeyX: string, pubkeyY: string, pathDb: string) {
@@ -39,6 +38,11 @@ export async function checkIssuerExisted(pubkeyX: string, pubkeyY: string) {
 }
 
 export async function getAuthenIssuerId() {
+    let serverPrivateKey = zidenjsUtils.hexToBuffer(PRIVATEKEY, 32);
+    const pubkey = auth.newEDDSAPublicKeyFromPrivateKey(serverPrivateKey);
+    const PUBKEYX = pubkey.X.toString(10);
+    const PUBKEYY = pubkey.Y.toString(10);
+
     const issuer = await Issuer.findOne({pubkeyX: PUBKEYX, pubkeyY: PUBKEYY});
     return issuer?.issuerId;
 }

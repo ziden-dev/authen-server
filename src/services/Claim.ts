@@ -1,4 +1,4 @@
-import { witness as zidenjsWitness } from "zidenjs";
+import { queryMTP } from "@zidendev/zidenjs";
 import { GlobalVariables } from "../common/config/global.js";
 import { ClaimStatus, ProofType } from "../common/enum/EnumType.js";
 import Claim from "../models/Claim.js";
@@ -32,7 +32,7 @@ export async function getClaimByClaimId(claimId: string) {
 export async function getQueryMTPInput(issuerId: string, hi: string) {
     const issuerTree = await getTreeState(issuerId);
     try {
-        const kycQueryMTPInput = await zidenjsWitness.queryMTP.kycGenerateQueryMTPInput(
+        const kycQueryMTPInput = await queryMTP.kycGenerateQueryMTPInput(
             GlobalVariables.F.e(hi),
             issuerTree
         );
@@ -49,7 +49,7 @@ export async function getQueryMTPInput(issuerId: string, hi: string) {
 export async function getNonRevQueryMTPInput(issuerId: string, revNonce: number) {
     const issuerTree = await getTreeState(issuerId);
     try {
-        const kycNonRevQueryMTPInput = await zidenjsWitness.queryMTP.kycGenerateNonRevQueryMTPInput(
+        const kycNonRevQueryMTPInput = await queryMTP.kycGenerateNonRevQueryMTPInput(
             BigInt(revNonce),
             issuerTree
         );

@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  authen-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    volumes:
+      - ./src:/home/node/app/src
+      - ./logs:/home/node/app/logs
+      - ./db:/home/node/app/db
+      - ./build:/home/node/app/build
+    container_name: authen-server
+    networks:
+      - ziden
+      - default
+    depends_on:
+      - authen-db
+    expose:
+      - ${PORT}
+    ports:
+      - ${PORT}:${PORT}
+    command: npm run start
+  authen-db:
+    image: mongo
+    volumes:
+      - mongodb-authen:/data/db
+    networks:
+      - default
+volumes:
+  mongodb-authen:
+networks:
+  ziden:
+    external: true
+    name: ziden
+  default:
