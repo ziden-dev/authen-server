@@ -1,14 +1,57 @@
 # authen-server
-Các bước setup authen-server:
 
-    1. Cài docker
-    2. Clone repo authen-server
-    3. Tạo file .env
-    4. Tải file zidenjs đăt trong thư mục pkg
-    5. Chạy `npm i` để cài thư viện
-    6. Tải các thư mục db và build
-    7. Chạy các câu lệnh đã được thiết lập trong makefile:
-        a. `make build-image`: Build lại image của authen-server khi thay đổi file .env
-        b. `make up`: Chạy authen-server dưới dạng hot reload để dev (detach)
-        c. `make up-prod`: Chạy authen server ở dạng prod (detach)
-        d. `make down`: Tắt authen server
+## > Getting Started
+
+### Step 1: Set up the Development Environment
+
+You need to set up your development environment before you can do anything.
+
+Install [Node.js and NPM](https://nodejs.org/en/download/)
+
+Install MongoDB
+
+### Step 2: Setup the project
+
+Fork or download this project.
+
+Then copy the `.env.example` file and rename it to `.env`. In this file you have to add your database connection information, your port to run server, your private key to setup your authen-trees, ...
+Create a new database with the name you have in your `.env`-file.
+
+
+Install dependencies
+```
+npm i
+```
+
+### Step 3: Start the server
+
+Run
+```
+npm start
+```
+
+## > API Routes
+
+Access API Docs at
+```
+http[s]:<hostname>[:<port>]/api-docs
+```
+
+## > Project Structure
+
+| Name                              | Description |
+| --------------------------------- | ----------- |
+| **level_db_*/**                   | Fast key-value storage to store your trees |
+| **logs/**                         | Logs of the running process  |
+| **src/**                          | Source files |
+| **src/common/**                   | Setup common variables and functions |
+| **src/controllers/**              | REST API Controllers |
+| **src/lib/**                      | The core features like logger and env variables |
+| **src/routes/**                   | Routing configuration |
+| **src/services/**                 | Services layer |
+| **src/util/**                     | General purposed utility functions |
+| **swagger/**                      | Your swagger config |
+| .env.example                      | Environment configurations example |
+| secret.example.json               | Your wallet private key example |
+
+## > Docker
